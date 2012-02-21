@@ -1,0 +1,4 @@
+lib/record_history.rb 9e9f54bec98f9af93f7705af3030af09197169a9
+lib/record_history/version.rb 7d6308d8b42ce82874c565499ca49b93332888df
+lib/generators/record_history/install_generator.rb c6b047fa8ee8c9d27fb9b89fca0e59f4703df978
+lib/generators/record_history/templates/create_record_histories.rb 55a6577f127614215f0d3155ff86f394d689d32b
