@@ -1,0 +1,18 @@
+PATH
+  remote: .
+  specs:
+    record_history (0.0.1)
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+    redcarpet (1.17.2)
+    yard (0.7.5)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  record_history!
+  redcarpet (~> 1.17)
+  yard (~> 0.7.5)
