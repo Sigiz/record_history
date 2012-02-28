@@ -174,17 +174,15 @@
       <pre class="lines">
 
 
-14
-15
-16
-17</pre>
+18
+19
+20</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/generators/record_history/templates/create_record_histories.rb', line 14</span>
+      <pre class="code"><span class="info file"># File 'lib/generators/record_history/templates/create_record_histories.rb', line 18</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_down'>down</span>
-  <span class='id identifier rubyid_remove_index'>remove_index</span> <span class='symbol'>:versions</span><span class='comma'>,</span> <span class='lbracket'>[</span><span class='symbol'>:item_type</span><span class='comma'>,</span> <span class='symbol'>:item_id</span><span class='rbracket'>]</span>
-  <span class='id identifier rubyid_drop_table'>drop_table</span> <span class='symbol'>:versions</span>
+  <span class='id identifier rubyid_drop_table'>drop_table</span> <span class='symbol'>:record_histories</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -214,21 +212,29 @@
 9
 10
 11
-12</pre>
+12
+13
+14
+15
+16</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/generators/record_history/templates/create_record_histories.rb', line 2</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_up'>up</span>
   <span class='id identifier rubyid_create_table'>create_table</span>  <span class='symbol'>:record_histories</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_t'>t</span><span class='op'>|</span>
-    <span class='id identifier rubyid_t'>t</span><span class='period'>.</span><span class='id identifier rubyid_string'>string</span>    <span class='symbol'>:target_type</span><span class='comma'>,</span> <span class='symbol'>:null</span> <span class='op'>=&gt;</span> <span class='kw'>false</span>
-    <span class='id identifier rubyid_t'>t</span><span class='period'>.</span><span class='id identifier rubyid_integer'>integer</span>   <span class='symbol'>:target_id</span><span class='comma'>,</span>   <span class='symbol'>:null</span> <span class='op'>=&gt;</span> <span class='kw'>false</span>
+    <span class='id identifier rubyid_t'>t</span><span class='period'>.</span><span class='id identifier rubyid_string'>string</span>    <span class='symbol'>:item_type</span><span class='comma'>,</span> <span class='symbol'>:null</span> <span class='op'>=&gt;</span> <span class='kw'>false</span>
+    <span class='id identifier rubyid_t'>t</span><span class='period'>.</span><span class='id identifier rubyid_integer'>integer</span>   <span class='symbol'>:item_id</span><span class='comma'>,</span>   <span class='symbol'>:null</span> <span class='op'>=&gt;</span> <span class='kw'>false</span>
     <span class='id identifier rubyid_t'>t</span><span class='period'>.</span><span class='id identifier rubyid_string'>string</span>    <span class='symbol'>:attr_name</span><span class='comma'>,</span>   <span class='symbol'>:null</span> <span class='op'>=&gt;</span> <span class='kw'>false</span>
+    <span class='id identifier rubyid_t'>t</span><span class='period'>.</span><span class='id identifier rubyid_text'>text</span>      <span class='symbol'>:old_value_dump</span><span class='comma'>,</span> <span class='symbol'>:null</span> <span class='op'>=&gt;</span> <span class='kw'>false</span>
+    <span class='id identifier rubyid_t'>t</span><span class='period'>.</span><span class='id identifier rubyid_text'>text</span>      <span class='symbol'>:new_value_dump</span><span class='comma'>,</span> <span class='symbol'>:null</span> <span class='op'>=&gt;</span> <span class='kw'>false</span>
+    <span class='id identifier rubyid_t'>t</span><span class='period'>.</span><span class='id identifier rubyid_string'>string</span>    <span class='symbol'>:author_type</span>
     <span class='id identifier rubyid_t'>t</span><span class='period'>.</span><span class='id identifier rubyid_integer'>integer</span>   <span class='symbol'>:author_id</span>
-    <span class='id identifier rubyid_t'>t</span><span class='period'>.</span><span class='id identifier rubyid_text'>text</span> <span class='symbol'>:object</span>
-    <span class='id identifier rubyid_t'>t</span><span class='period'>.</span><span class='id identifier rubyid_datetime'>datetime</span> <span class='symbol'>:created_at</span>
+    <span class='id identifier rubyid_t'>t</span><span class='period'>.</span><span class='id identifier rubyid_datetime'>datetime</span>  <span class='symbol'>:created_at</span>
   <span class='kw'>end</span>
-  <span class='id identifier rubyid_add_index'>add_index</span> <span class='symbol'>:versions</span><span class='comma'>,</span> <span class='lbracket'>[</span><span class='symbol'>:item_type</span><span class='comma'>,</span> <span class='symbol'>:item_id</span><span class='rbracket'>]</span>
+  <span class='id identifier rubyid_add_index'>add_index</span> <span class='symbol'>:record_histories</span><span class='comma'>,</span> <span class='lbracket'>[</span><span class='symbol'>:item_type</span><span class='comma'>,</span> <span class='symbol'>:item_id</span><span class='comma'>,</span> <span class='symbol'>:attr_name</span><span class='rbracket'>]</span>
+  <span class='id identifier rubyid_add_index'>add_index</span> <span class='symbol'>:record_histories</span><span class='comma'>,</span> <span class='lbracket'>[</span><span class='symbol'>:item_type</span><span class='comma'>,</span> <span class='symbol'>:item_id</span><span class='rbracket'>]</span>
+  <span class='id identifier rubyid_add_index'>add_index</span> <span class='symbol'>:record_histories</span><span class='comma'>,</span> <span class='lbracket'>[</span><span class='symbol'>:author_type</span><span class='comma'>,</span> <span class='symbol'>:author_id</span><span class='rbracket'>]</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -240,7 +246,7 @@
 </div>
     
     <div id="footer">
-  Generated on Tue Feb 21 13:39:16 2012 by 
+  Generated on Fri Feb 24 12:04:59 2012 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.7.5 (ruby-1.9.3).
 </div>

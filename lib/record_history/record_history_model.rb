@@ -2,7 +2,9 @@ class RecordHistoryModel < ActiveRecord::Base
 	self.table_name = "record_histories"
 
 	belongs_to :item, :polymorphic => true
-	validates :item_type, :item_id, :attr_name, :old_value_dump, :new_value_dump, { :presence => true }
+	belongs_to :author, :polymorphic => true
+	validates :item_type, :item_id, { :presence => true }
+	validates :old_value_dump, :new_value_dump, :presence => { :unless => Proc.new{|record| record.attr_name.blank?} }
 
 	def old_value
 		self.old_value = nil if self.old_value_dump.nil?

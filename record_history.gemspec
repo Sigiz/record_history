@@ -19,8 +19,14 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   # specify any dependencies here; for example:
-  # s.add_development_dependency "rspec"
+  s.add_development_dependency "rspec"
+  s.add_development_dependency "factory_girl"
   s.add_development_dependency "yard", "~> 0.7.5"
   s.add_development_dependency "redcarpet", "~> 1.17"
-  # s.add_runtime_dependency "rest-client"
-end
+  s.add_development_dependency "sqlite3"
+  s.add_development_dependency "rspec-set"
+  s.add_development_dependency "faker"
+  s.add_dependency "activesupport"
+  s.add_dependency "activemodel"
+  s.add_dependency "activerecord"
+  end
