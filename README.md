@@ -6,6 +6,7 @@ ActiveRecord history
 
 ```
 gem install record_history
+rails g record_history:install
 ```
 
 ## Usage
