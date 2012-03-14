@@ -1,3 +1,5 @@
+require 'base64'
+
 class RecordHistoryModel < ActiveRecord::Base
 	self.table_name = "record_histories"
 
@@ -8,11 +10,11 @@ class RecordHistoryModel < ActiveRecord::Base
 
 	def old_value
 		self.old_value = nil if self.old_value_dump.nil?
-		self.old_value_dump.nil? ? nil : Marshal.load(self.old_value_dump)
+		self.old_value_dump.nil? ? nil : decode_value(self.old_value_dump)
 	end
 
 	def old_value=(value)
-		self.old_value_dump = Marshal.dump(value)
+		self.old_value_dump = encode_value(value)
 	end
 
 	def new_value
@@ -22,5 +24,15 @@ class RecordHistoryModel < ActiveRecord::Base
 
 	def new_value=(value)
 		self.new_value_dump = Marshal.dump(value)
+	end
+
+	private
+
+	def encode_value(value)
+		Base64.encode64(Marshal.dump(value))
+	end
+
+	def decode_value(value)
+		Marshal.load(Base64.decode64(value))
 	end
 end
