@@ -43,16 +43,14 @@ module RecordHistory
 		end
 
 		module InstanceMethods
-
-
 			def build_history_on_update
         return if self.new_record?
         self.record_history_obj = []
-				self.class.new.attributes.keys.each do |attr_name|
+        self.class.new.attributes.keys.each do |attr_name|
 					if (self.send("#{attr_name}_changed?"))
-            next if self.class.record_history_only && !self.class.record_history_only.include?(attr_name)
-            next if self.class.record_history_ignore && self.record_history_ignore.include?(attr_name)
-						self.record_history_obj << RecordHistoryModel.new(
+            next if !self.class.record_history_only.blank? && !self.class.record_history_only.include?(attr_name)
+            next if !self.class.record_history_ignore.blank? && self.record_history_ignore.include?(attr_name)
+					  self.record_history_obj << RecordHistoryModel.new(
 											:item_type => self.class.name,
                       :item_id => self.id,
                       :attr_name => attr_name,
@@ -60,7 +58,7 @@ module RecordHistory
                       :new_value => self.send("#{attr_name}"),
                       :author => RecordHistory.author
 						)
-					end
+          end
 				end
 			end
 
