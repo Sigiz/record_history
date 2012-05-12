@@ -56,7 +56,8 @@ module RecordHistory
                       :attr_name => attr_name,
                       :old_value => self.send("#{attr_name}_was"),
                       :new_value => self.send("#{attr_name}"),
-                      :author => RecordHistory.author
+                      :author => RecordHistory.author,
+                      :transaction_id => Time.now.to_f
 						)
           end
 				end
