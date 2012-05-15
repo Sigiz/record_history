@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 module RecordHistory
 	module Model
 
@@ -19,6 +20,9 @@ module RecordHistory
 
         class_attribute :record_history_on
         self.record_history_on = ([options[:on] || ['create', 'update']].flatten.compact).map{|attr| attr.to_s}
+
+        class_attribute :record_history_polymorphic_group
+        self.record_history_polymorphic_group = ([options[:polymorphic_group]].flatten.compact || []).map{|attr| attr.to_s}
 
 				has_many :record_history,
                  :class_name => 'RecordHistoryModel',
@@ -46,22 +50,48 @@ module RecordHistory
 			def build_history_on_update
         return if self.new_record?
         self.record_history_obj = []
+        ignore = self.attr_ignore
         self.class.new.attributes.keys.each do |attr_name|
-					if (self.send("#{attr_name}_changed?"))
-            next if !self.class.record_history_only.blank? && !self.class.record_history_only.include?(attr_name)
-            next if !self.class.record_history_ignore.blank? && self.record_history_ignore.include?(attr_name)
-					  self.record_history_obj << RecordHistoryModel.new(
-											:item_type => self.class.name,
+					next unless (self.send("#{attr_name}_changed?"))
+
+          next if ignore.include?(attr_name)
+          next if !self.class.record_history_only.blank? && !self.class.record_history_only.include?(attr_name)
+          next if !self.class.record_history_ignore.blank? && self.record_history_ignore.include?(attr_name)
+				  self.record_history_obj << RecordHistoryModel.new(
+										:item_type => self.class.name,
+                    :item_id => self.id,
+                    :attr_name => attr_name,
+                    :old_value => self.send("#{attr_name}_was"),
+                    :new_value => self.send("#{attr_name}"),
+                    :author => RecordHistory.author,
+                    :transaction_id => Time.now.to_f
+					)
+				end
+        self.record_history_polymorphic_group.each do |attr|
+          next if !self.send("#{attr}_type_changed?") && !self.send("#{attr}_id_changed?")
+          self.record_history_obj << RecordHistoryModel.new(
+                      :item_type => self.class.name,
                       :item_id => self.id,
-                      :attr_name => attr_name,
-                      :old_value => self.send("#{attr_name}_was"),
-                      :new_value => self.send("#{attr_name}"),
+                      :attr_name => attr,
+                      :old_value => {"#{attr}_type".to_sym => self.send("#{attr}_type_was"), "#{attr}_id".to_sym => self.send("#{attr}_id_was")},
+                      :new_value => {"#{attr}_type".to_sym => self.send("#{attr}_type"), "#{attr}_id".to_sym => self.send("#{attr}_id")},
                       :author => RecordHistory.author,
                       :transaction_id => Time.now.to_f
-						)
-          end
-				end
+            )
+        end
 			end
+
+      def attr_ignore
+        attr_ignore = []
+        self.record_history_polymorphic_group.each do |attr|
+          if !self.reflections[attr.to_sym].options[:polymorphic]
+            raise "Тип связи должен быть polymorphic"
+          else
+            attr_ignore += ["#{attr}_id", "#{attr}_type"]
+          end
+        end
+        attr_ignore
+      end
 
 			def save_history_on_update
         self.record_history_obj.each{|item| item.save}
