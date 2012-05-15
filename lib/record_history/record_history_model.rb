@@ -19,11 +19,11 @@ class RecordHistoryModel < ActiveRecord::Base
 
 	def new_value
 		self.new_value = nil if self.new_value_dump.nil?
-		Marshal.load(self.new_value_dump)
+		decode_value(self.new_value_dump)
 	end
 
 	def new_value=(value)
-		self.new_value_dump = Marshal.dump(value)
+		self.new_value_dump = encode_value(value)
 	end
 
 	private
