@@ -1,5 +1,3 @@
-# record_history
-
 ActiveRecord history
 
 ## Installation
