@@ -7,7 +7,6 @@ require 'bundler/setup'
 
 require 'rspec'
 require 'rspec-set'
-require 'shoulda-matchers'
 require 'logger'
 require 'factory_girl'
 require 'faker'
@@ -15,6 +14,7 @@ require 'faker'
 require 'active_support'
 require 'active_model'
 require 'active_record'
+require 'shoulda-matchers'
 
 require 'record_history'
 
@@ -31,6 +31,7 @@ require 'support/models'
 
 RSpec.configure do |config|
   config.after do
+    [SomeData, User, RecordHistoryModel].each(&:destroy_all)
     FactoryGirl.reload
   end
 end
