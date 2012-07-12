@@ -101,7 +101,8 @@ module RecordHistory
         RecordHistoryModel.create!(
           :item_type => self.class.name,
           :item_id => self.id,
-          :author => RecordHistory.author
+          :author => RecordHistory.author,
+          :transaction_id => Time.now.to_f
         )
       end
     end
