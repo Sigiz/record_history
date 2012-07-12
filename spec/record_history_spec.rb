@@ -1,46 +1,36 @@
 require 'spec_helper'
 
-require 'factories/record_history_models'
-require 'factories/users'
-require 'factories/some_datas'
-require 'shoulda-matchers'
-
 describe RecordHistoryModel do
+
+  let (:author) { Factory.create(:user) }
+  before { ::RecordHistory.author = author }
+
   context "validations" do
-    before :each do
-      @hist = Factory.create(:record_history_model)
+    it { should validate_presence_of(:item_type) }
+    it { should validate_presence_of(:item_id) }
+    describe "when no attribute name is present" do
+      it { should_not validate_presence_of(:old_value_dump) }
+      it { should_not validate_presence_of(:new_value_dump) }
     end
-    it "presence" do
-      [:item_type, :item_id, :old_value_dump, :new_value_dump].each do |attr|
-        @hist.send("#{attr}=", nil)
-        @hist.should_not be_valid
-        @hist.errors.size.should == 1
-        @hist.errors.get(attr).should == ["can't be blank"]
-        @hist.send("#{attr}=", Factory.build(:record_history_model).send(attr ))
-        @hist.should be_valid
-      end
+    describe "when an attribute name is present" do
+      before { subject.attr_name = "stuff" }
+      it { should validate_presence_of(:old_value_dump) }
+      it { should validate_presence_of(:new_value_dump) }
     end
   end
 
   context "associations" do
-    before :each do
-      @hist = Factory.create(:record_history_model)
+    let (:some_data) { Factory.create(:some_data) }
+    let (:first_history_from_some_data) { some_data.record_history.first }
+
+    it "creates a history when some data is created" do
+      some_data.class.name == first_history_from_some_data.item_type.should
+      some_data.id.should == first_history_from_some_data.item.id
     end
 
-    it "item" do
-      item = @hist.item
-      item.class.name.should == @hist.item_type
-      item.id.should == @hist.item.id
-
-      item.record_history.first.should == @hist
-    end
-
-    it "author" do
-      author = @hist.author
-      author.class.name.should == @hist.author_type
-      author.id.should == @hist.author_id
-
-      author.written_history.first.class.name.should == "RecordHistoryModel"
+    it "uses the current author on the first history" do
+      first_history_from_some_data.author.should == author
+      author.written_history.first.should == first_history_from_some_data
     end
   end
 end
