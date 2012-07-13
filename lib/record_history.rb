@@ -4,21 +4,13 @@ require "record_history/controller"
 require "record_history/has_record_history"
 
 module RecordHistory
-  
-  @@config = {}
 
   def self.author=(value)
-    config[:author] = value
+    Thread.current[:author] = value
   end
 
   def self.author
-    config[:author]
-  end
-
-  private
-
-  def self.config
-    @@config
+    Thread.current[:author]
   end
 
 end
