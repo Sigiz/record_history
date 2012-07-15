@@ -22,8 +22,10 @@ ActiveRecord::Schema.define(:version => 0) do
     t.string    :author_type
     t.integer   :author_id
     t.datetime  :created_at
+    t.decimal   :transaction_id, :null => false
   end
   add_index :record_histories, [:item_type, :item_id, :attr_name]
   add_index :record_histories, [:item_type, :item_id]
   add_index :record_histories, [:author_type, :author_id]
+  add_index :record_histories, :transaction_id
 end

@@ -6,8 +6,6 @@ require 'rubygems'
 require 'bundler/setup'
 
 require 'rspec'
-require 'rspec-set'
-require 'shoulda-matchers'
 require 'logger'
 require 'factory_girl'
 require 'faker'
@@ -15,22 +13,22 @@ require 'faker'
 require 'active_support'
 require 'active_model'
 require 'active_record'
+require 'shoulda-matchers'
 
 require 'record_history'
 
 ActiveRecord::Base.logger = Logger.new(plugin_test_dir + "/debug.log")
-
-require 'yaml'
-require 'erb'
 ActiveRecord::Base.configurations = YAML::load(ERB.new(IO.read(plugin_test_dir + "/db/database.yml")).result)
 ActiveRecord::Base.establish_connection(ENV["DB"] || "sqlite3mem")
 ActiveRecord::Migration.verbose = false
 load(File.join(plugin_test_dir, "db", "schema.rb"))
 
 require 'support/models'
+require 'factories/users'
+require 'factories/some_datas'
 
 RSpec.configure do |config|
   config.after do
-    FactoryGirl.reload
+    [SomeData, User, RecordHistoryModel].each(&:destroy_all)
   end
 end
