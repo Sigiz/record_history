@@ -44,4 +44,4 @@ rails g record_history:install
     # get record_history items created by user
     User.first.written_history
   
-test
+test 2
